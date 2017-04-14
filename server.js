@@ -68,6 +68,7 @@ function getResource(path, httpVersion) {
       return generateResponse('css/styles.css');
     case '/404':
     case '/404.html':
+      return generateResponse('404.html');
     default:
       return generateResponse('404.html', '404 NOT FOUND');
   }
