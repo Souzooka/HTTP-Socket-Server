@@ -27,7 +27,12 @@ ${file}`;
         c.end();
         break;
       default:
-        headerAndBody = `HTTP/1.1 404 NOT FOUND`;
+        file = fs.readFileSync('404.html', 'utf8');
+        headerAndBody = `HTTP/1.1 404 NOT FOUND
+Content-Type : text/html
+Content-Length: ${file.length}
+
+${file}`;
         c.write(headerAndBody);
         c.end();
     }
