@@ -30,16 +30,25 @@ function storeHeader(header) {
 }
 
 function generateResponse(file, status = '200 OK') {
-  const fileContents = fs.readFileSync(file, 'utf8');
   const date = new Date();
   const dateStr = date.toUTCString();
+  let fileData = '';
+  fs.readFile(file, 'utf8', (err, data) => {
+
+    if (err) {
+      console.log(err);
+    }
+    console.log(data);
+    fileData += data;
+  });
+
   return `HTTP/1.1 ${status}
 Content-Type : text/html
-Content-Length: ${fileContents.length}
+Content-Length: ${fileData.length}
 Date: ${date.toUTCString()}
 Server: HackerSpace
 
-${fileContents}`;
+${fileData}`;
 }
 
 function getResource(path, httpVersion) {

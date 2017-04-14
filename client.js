@@ -26,9 +26,12 @@ function getLocation(url) {
 }
 
 const url = getLocation(commands[commands.length-1]);
+console.log(url)
 let path = url.pathname;
 const host = url.host;
 let port = null;
+
+
 
 if (!path) {
   path = '/';
