@@ -34,11 +34,9 @@ function generateResponse(file, status = '200 OK') {
   const dateStr = date.toUTCString();
   let fileData = '';
   fs.readFile(file, 'utf8', (err, data) => {
-
     if (err) {
       console.log(err);
     }
-    console.log(data);
     fileData += data;
   });
 
