@@ -1,3 +1,4 @@
+/*jshint esversion:6*/
 const net = require('net');
 const fs = require('fs');
 
@@ -21,11 +22,15 @@ const server = net.createServer( (c) => {
   });
 });
 
-function generateResponse(file) {
+function generateResponse(file, status = '200 OK') {
   const fileContents = fs.readFileSync(file, 'utf8');
-  return `HTTP/1.1 200 OK
+  const date = new Date();
+  const dateStr = date.toUTCString();
+  return `HTTP/1.1 ${status}
 Content-Type : text/html
 Content-Length: ${fileContents.length}
+Date: ${date.toUTCString()}
+Server: HackerSpace
 
 ${fileContents}`;
 }
@@ -50,7 +55,7 @@ function getResource(path, httpVersion) {
     case '/404':
     case '/404.html':
     default:
-      return generateResponse('404.html');
+      return generateResponse('404.html', '404 NOT FOUND');
   }
 }
 
