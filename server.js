@@ -2,6 +2,8 @@
 const net = require('net');
 const fs = require('fs');
 
+const headers = [];
+
 const server = net.createServer( (c) => {
 
   c.on('data', (data) => {
@@ -14,6 +16,7 @@ const server = net.createServer( (c) => {
 
     let response = null;
 
+    storeHeader(header);
     if (method === "GET") {
       response = getResource(path, httpVersion);
       c.write(response);
@@ -21,6 +24,10 @@ const server = net.createServer( (c) => {
     }
   });
 });
+
+function storeHeader(header) {
+  headers.push(header);
+}
 
 function generateResponse(file, status = '200 OK') {
   const fileContents = fs.readFileSync(file, 'utf8');
