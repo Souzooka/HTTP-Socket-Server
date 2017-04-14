@@ -13,9 +13,10 @@ const client = net.connect({port:8080}, () => {
 
   const date = new Date();
   const dateStr = date.toUTCString();
+  const address = networkInterfaces[Object.keys(networkInterfaces)[1]][0].address;
   const header = `GET ${uri} HTTP/1.1
 Date: ${dateStr}
-Host: ${networkInterfaces.wlp2s0[0].address}
+Host: ${address}
 User-Agent: Node 7.9.0`;
   client.write(header);
 
