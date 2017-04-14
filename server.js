@@ -21,6 +21,15 @@ const server = net.createServer( (c) => {
   });
 });
 
+function generateResponse(file) {
+  const fileContents = fs.readFileSync(file, 'utf8');
+  return `HTTP/1.1 200 OK
+Content-Type : text/html
+Content-Length: ${fileContents.length}
+
+${fileContents}`;
+}
+
 function getResource(path, httpVersion) {
   let file = null;
   let headerAndBody = null;
@@ -28,50 +37,20 @@ function getResource(path, httpVersion) {
     case '/':
     case '/index':
     case '/index.html':
-      file = fs.readFileSync('index.html', 'utf8');
-      headerAndBody = `HTTP/1.1 200 OK
-Content-Type : text/html
-Content-Length: ${file.length}
-
-${file}`;
-      return headerAndBody;
+      return generateResponse('index.html');
     case '/hydrogen':
     case '/hydrogen.html':
-      file = fs.readFileSync('hydrogen.html', 'utf8');
-      headerAndBody = `HTTP/1.1 200 OK
-Content-Type : text/html
-Content-Length: ${file.length}
-
-${file}`;
-      return headerAndBody;
+      return generateResponse('hydrogen.html');
     case '/helium':
     case '/helium.html':
-      file = fs.readFileSync('helium.html', 'utf8');
-      headerAndBody = `HTTP/1.1 200 OK
-Content-Type : text/html
-Content-Length: ${file.length}
-
-${file}`;
-      return headerAndBody;
+      return generateResponse('helium.html');
     case '/css/styles':
     case '/css/styles.css':
-      file = fs.readFileSync('css/styles.css', 'utf8');
-      headerAndBody = `HTTP/1.1 200 OK
-Content-Type : text/css
-Content-Length: ${file.length}
-
-${file}`;
-      return headerAndBody;
+      return generateResponse('css/styles.css');
     case '/404':
     case '/404.html':
     default:
-      file = fs.readFileSync('404.html', 'utf8');
-      headerAndBody = `HTTP/1.1 404 NOT FOUND
-Content-Type : text/html
-Content-Length: ${file.length}
-
-${file}`;
-      return headerAndBody;
+      return generateResponse('404.html');
   }
 }
 
