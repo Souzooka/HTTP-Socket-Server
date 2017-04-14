@@ -1,13 +1,14 @@
 const net = require('net');
-const request = [process.argv[2], process.argv[3], process.argv[4]];
 
-if (!request[0] || !request[1] || !request[2]) {
-  throw new Error('Usage is "client.js <METHOD> <PATH> <HTTPVERSION>"');
+const uri = process.argv[2];
+
+if (!uri) {
+  throw new Error('Usage is "client.js <URL>"');
 }
 
 const client = net.connect({port:8080}, () => {
 
-  const header = `${request[0]} ${request[1]} ${request[2]}`;
+  const header = `GET ${uri} HTTP/1.1`;
   client.write(header);
 
   client.on('data', (data) => {
