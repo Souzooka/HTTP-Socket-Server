@@ -2,6 +2,7 @@
 const net = require('net');
 const os = require('os');
 const networkInterfaces = os.networkInterfaces();
+const url = require('url');
 
 const commands = [];
 for (let i = 2; i < process.argv.length; i++) {
@@ -11,26 +12,16 @@ for (let i = 2; i < process.argv.length; i++) {
   commands.push(process.argv[i]);
 }
 
-function getLocation(url) {
-  var match = url.match(/^(https?\:)\/\/(([^:\/?#]*)(?:\:([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
-  return match && {
-      url: url,
-      protocol: match[1],
-      host: match[2],
-      hostname: match[3],
-      port: match[4],
-      pathname: match[5],
-      search: match[6],
-      hash: match[7]
-  };
+if (commands[commands.length-1].slice(0, 9) !== 'localhost') {
+  var requestedURL = url.parse(commands[commands.length-1]);
+  var path = requestedURL.path;
+  var port = requestedURL.port;
+  var host = requestedURL.hostname;
+} else {
+  var port = 8080;
+  var host = 'localhost';
+  var path = commands[commands.length-1].slice(commands[commands.length-1].lastIndexOf('/'));
 }
-
-const url = getLocation(commands[commands.length-1]);
-console.log(url)
-let path = url.pathname;
-const host = url.host;
-let port = null;
-
 
 
 if (!path) {
@@ -38,11 +29,12 @@ if (!path) {
 }
 
 if (!port) {
-  switch (url.protocol) {
+  switch (requestedURL.protocol) {
     case 'http:':
       port = 80;
       break;
     default:
+      port = 80;
       break;
   }
 }
@@ -50,10 +42,6 @@ if (!port) {
 if (!url) {
   throw new Error('Usage is "client.js <URL>"');
 }
-
-console.log(host);
-console.log(port);
-console.log(path);
 
 const client = net.connect({port:port, host:host}, () => {
 
